@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from patsy import dmatrices
 import statsmodels.api as sm
+from sys import exit
 
 def ipf_2D(row_total, col_total, x = None, maxitr = 3, tol = 10e-5, debug = False):
     """Standard implementation of ipf
@@ -52,3 +53,28 @@ def ipf_2D_poisson(row_total, col_total, x = None):
     po_results = sm.GLM(response, predictors, family=sm.families.Poisson()).fit()
     x = po_results.predict(predictors.values).reshape(x.shape)
     return(x)
+
+class ipf:
+    def __init__(self, initial_joint = None):
+        self.initial_joint = initial_joint
+
+    def fit(self,initial_joint = self.initial_joint, marginal1, marginal2,maxitr = 3, tol = 10e-5, method = 'mle'):
+        if(method=='mle'):
+            print('Fitting using mle ...')
+            if((len(row_total)!=initial_joint.shape[0])|(len(col_total)!=initial_joint.shape[1])):
+                print('Dimension mismatch')
+                exit(1)
+            return(ipf_2D(row_total = marginal1,
+            col_total = marginal2,
+            x = initial_joint,
+            maxitr = 100,
+            tol = 10e-5,
+            debug = False))
+        elif(method=='poisson'):
+            print('Fitting using poisson ...')
+            if((len(row_total)!=initial_joint.shape[0])|(len(col_total)!=initial_joint.shape[1])):
+                print('Dimension mismatch')
+                exit(1)
+            return(ipf_2D_poisson(row_total = marginal1,
+            col_total = marginal2,
+            x = initial_joint))
