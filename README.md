@@ -6,7 +6,7 @@ From Wikipedia: IPF is an iterative algorithm for estimating cell values of a co
 
 The program consists of the following scripts
 * ipf.py: contains the main functions and class for IPF
-* main.py: runs the program to ipf on some toy data
+* main.py: runs the program on some toy data
 
 ## Notebooks
 
